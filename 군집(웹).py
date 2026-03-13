@@ -20,13 +20,26 @@ st.title("이미지 자동 군집 프로그램")
 
 st.write("이미지를 업로드하면 자동으로 군집화 후 ZIP으로 다운로드합니다.")
 
+
+if st.button("새로 시작"):
+
+    shutil.rmtree("temp_images", ignore_errors=True)
+
+    st.session_state.upload_key += 1   # uploader 초기화
+
+    st.rerun()
+
 # ----------------------------------
 # 업로드
 # ----------------------------------
+if "upload_key" not in st.session_state:
+    st.session_state.upload_key = 0
+
 uploaded_files = st.file_uploader(
     "이미지 업로드",
     accept_multiple_files=True,
-    type=["jpg","jpeg","png","bmp"]
+    type=["jpg","jpeg","png","bmp"],
+    key=f"uploader_{st.session_state.upload_key}"
 )
 
 n_clusters = st.slider("군집 개수를 선택하세요",2,10,5)
